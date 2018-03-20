@@ -6,4 +6,4 @@
 
 3. Third commit: Compatible with import edu.princeton.cs.algs4.WeightedQuickUnionUF, however, backwash seems happen in this case. 86% coursera 
 
-4. Fix corner problem accodring to coursera report, backwash still there.
+4. Fix corner problem accodring to coursera report, backwash still there. 88% coursera
