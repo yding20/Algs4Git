@@ -1,29 +1,26 @@
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Out;
+
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 
 public class PercolationStats{
-	private int n;
-	private int trials;
-	private double[] Parray;
+
+	final private static double Const = 1.96;
+	private  double ave;
+	private  double std;
+	private  double[] Parray;
 
 	public PercolationStats(int n, int trials){
-		this.n = n;
-		this.trials = trials;
 		Parray = new double[trials];
 
 		for (int i = 0; i < trials; i++){
 			Percolation perco = new Percolation(n);
-			for (int j = 0; j < 500000; j++){
+			for (int j = 0; j < 50000; j++){
 				int a = StdRandom.uniform(n)+1;
 				int b = StdRandom.uniform(n)+1;
 				perco.open(a, b);
 				if(perco.percolates() == true){
-					int openblock = perco.numberofOpenSites();
+					int openblock = perco.numberOfOpenSites();
 					double p = (double)openblock/(n*n);
 					Parray[i] = p;
 					break;
@@ -34,19 +31,21 @@ public class PercolationStats{
 	}
 
 	public double mean(){
-		return StdStats.mean(Parray);
+		ave = StdStats.mean(Parray);
+		return ave;
 	}
 
 	public double stddev(){
-		return StdStats.stddev(Parray);
+		std = StdStats.stddev(Parray);
+		return std;
 	}
 
 	public double confidenceLo(){
-		return StdStats.mean(Parray) - 1.96*StdStats.stddev(Parray)/Math.sqrt(Parray.length);
+		return ave - Const*std/Math.sqrt(Parray.length);
 	}
 
 	public double confidenceHi(){
-		return StdStats.mean(Parray) + 1.96*StdStats.stddev(Parray)/Math.sqrt(Parray.length);
+		return ave + Const*std/Math.sqrt(Parray.length);
 	}
 
 	public static void main(String[] args){

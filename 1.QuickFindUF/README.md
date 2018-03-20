@@ -4,4 +4,6 @@
 
 2. Second commit: Index use 1~n now. Add the virtual bottom and virtual top, much faster now. Sitll use UFWithFindMax now!
 
-3. Third commit: Compatible with import edu.princeton.cs.algs4.WeightedQuickUnionUF, however, backwash seems happen in this case.
+3. Third commit: Compatible with import edu.princeton.cs.algs4.WeightedQuickUnionUF, however, backwash seems happen in this case. 86% coursera 
+
+4. Fix corner problem accodring to coursera report, backwash still there.

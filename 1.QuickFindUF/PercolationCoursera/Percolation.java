@@ -1,20 +1,18 @@
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Out;
 import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation{
 
-	private int n;
-	private int N;
-	private WeightedQuickUnionUF uf;
+	final private int n;
+	final private int N;
+	final private WeightedQuickUnionUF uf;
 	private boolean[][] grid;
 	private int Nopen;
 
 	public Percolation(int n){
+		 if (n <= 0) {
+            throw new IllegalArgumentException("N must be bigger than 0");
+        } 
 		this.n = n;           // this key word is used because a field n is shadowed by a construcor (or method) parameter
 		N = n*n;
 		uf = new WeightedQuickUnionUF(N+2);  //Add virtual top [0] and virtual bottom[N+1]
@@ -29,9 +27,21 @@ public class Percolation{
 	}
 
 	public void open(int row, int col){
-		if ( ! grid[row][col] ){
+		if (row <= 0 || row > n)
+            throw new java.lang.IllegalArgumentException("row index i out of bounds");
+        if (col <= 0 || col > n)
+            throw new java.lang.IllegalArgumentException ("column index j out of bounds");
+
+		int x = (row-1)*n+col;                  // x is the index of id[] list
+
+        if(n == 1){
+        	grid[row][col] = true;
+			uf.union(n, 0);
+			uf.union(n, N+1);
+			Nopen++;
+        }else{
+			if ( ! grid[row][col] ){
 			grid[row][col] = true;
-			int x = (row-1)*n+col;                  // x is the index of id[] list
 			if(row == 1 && col == 1){
 				if(grid[row][col+1]){uf.union(x, x+1);}
 				if(grid[row+1][col]){uf.union(x, x+n);}
@@ -62,7 +72,7 @@ public class Percolation{
 				if(grid[row][col+1]){uf.union(x, x+1);}
 				if(grid[row+1][col]){uf.union(x, x+n);}
 				if(grid[row-1][col]){uf.union(x, x-n);}
-			}else if (col == n && row != 0 && row != n){
+			}else if (col == n && row != 1 && row != n){
 				if(grid[row][col-1]){uf.union(x, x-1);}
 				if(grid[row+1][col]){uf.union(x, x+n);}
 				if(grid[row-1][col]){uf.union(x, x-n);}
@@ -74,13 +84,24 @@ public class Percolation{
 			}
 			Nopen++;
 		}
+
+        }
+
 	}
 
 	public boolean isOpen(int row, int col){
+		if (row <= 0 || row > n)
+            throw new java.lang.IllegalArgumentException ("row index i out of bounds");
+        if (col <= 0 || col > n)
+            throw new java.lang.IllegalArgumentException ("column index j out of bounds");
 		return grid[row][col];
 	}
 
 	public boolean isFull(int row, int col){
+		if (row <= 0 || row > n)
+            throw new java.lang.IllegalArgumentException ("row index i out of bounds");
+        if (col <= 0 || col > n)
+            throw new java.lang.IllegalArgumentException ("column index j out of bounds");
 		int x = (row-1)*n+col; 
 		if (uf.connected(0, x)){
 			return true;
@@ -88,7 +109,7 @@ public class Percolation{
 		return false;
 	}
 
-	public int numberofOpenSites(){
+	public int numberOfOpenSites(){
 		return Nopen;
 	}
 
@@ -102,14 +123,14 @@ public class Percolation{
 	public static void main(String[] args){
 		int n = Integer.parseInt(args[0]);
 		Percolation perco = new Percolation(n);
-		for (int i = 0; i < 500000; i++){
+		for (int i = 0; i < 50000; i++){
 			int a = StdRandom.uniform(n);
 			int b = StdRandom.uniform(n);
 			perco.open(a, b);
 //			System.out.println(a);
 //			System.out.println(b);
 			if(perco.percolates() == true){
-				int openblock = perco.numberofOpenSites();
+				int openblock = perco.numberOfOpenSites();
 				float p = (float)openblock/(n*n);
 				System.out.println("*************PercolationFound**************");
 				System.out.println("The number of Ramdom calls is "+ i);
