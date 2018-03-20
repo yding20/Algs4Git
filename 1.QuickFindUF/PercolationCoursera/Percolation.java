@@ -4,20 +4,20 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Out;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-//import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation{
 
 	private int n;
 	private int N;
-	private UFWithFindMax uf;
+	private WeightedQuickUnionUF uf;
 	private boolean[][] grid;
 	private int Nopen;
 
 	public Percolation(int n){
 		this.n = n;           // this key word is used because a field n is shadowed by a construcor (or method) parameter
 		N = n*n;
-		uf = new UFWithFindMax(N+2);  //Add virtual top [0] and virtual bottom[N+1]
+		uf = new WeightedQuickUnionUF(N+2);  //Add virtual top [0] and virtual bottom[N+1]
 
 		grid = new boolean[n+1][n+1]; //col[0], row[0] is useless, begin index 1~n
 		for(int i = 0; i <= n; i++){
