@@ -8,4 +8,4 @@
 
 4. Fix corner problem accodring to coursera report, backwash still there. 88% coursera
 
-5. Add ParrayMain
+5. Add ParrayMain, backwash need to be solved.
