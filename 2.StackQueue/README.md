@@ -1,8 +1,7 @@
 1. 95 points, need to look at deque and interator
 
-2. See the Assessment Guide for information on how to interpret this report.
 
-ASSESSMENT SUMMARY
+2. ASSESSMENT SUMMARY
 
 Compilation:  PASSED (0 errors, 2 warnings)
 API:          PASSED
