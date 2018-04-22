@@ -12,7 +12,7 @@ public class PercolationStats{
 	// 1. According to the giving APIs, mean() method do not hava input argument, which means we cannot invoke method mean()
 	// by passing values into(mean(double[] Parray)). So Parray[] mush be inside the class.
 	// 2. Since we cannot manipulate Parray directly outside the PercolationStats class(For example: Do Parray[i] = 2 in main),
-	//    so we much calculate p and give to Parray inside the class PercolationStats.
+	//    so we must calculate p and give to Parray inside the class PercolationStats.
 	// 3. if we can pass values to mean(double[] Parray), we might move Parray outside the class the main method.
 	// 4. This is the version where Parray[] is in main method. Parray is in main() method, and PercolationStats class merely
 	//    calculate the statistical variables. Do Not calculate Parray[]. Need Passing vaules to mean().
