@@ -6,33 +6,27 @@ import java.util.Stack;
 import java.util.Arrays;
 
 public class Board {
-	private int n;
+	private final int n;
 	private int hammingCount;
 	private int manhattanCount;
 	private int[][] blocks;
 
 	public Board(int[][] blocks) {
-		this.blocks = blocks;
 		n = blocks.length; // Give the number of rows
 		// columns = blocks[x].length   x is arbitary number less than n
+		this.blocks = blocks;
+		//blocks = new int[n][n];
+		//for(int i = 0; i < n; i++)
+		//	for(int j = 0; j< n; j++)
+		//		blocks[i][j] = inblocks[i][j];
+
 		hammingCount = 0;
-		manhattanCount = 0;
-	}
-
-	public int dimension() {
-		return n;
-	}
-
-	public int hamming() {
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++) {
 				if (blocks[i][j] != 0 && blocks[i][j] != i*n+j+1 )
 					hammingCount += 1;
 			}
-		return hammingCount;
-	}
-
-	public int manhattan() {
+		manhattanCount = 0;
 		int minusone;
 		int iline;
 		int jcolumn;
@@ -45,6 +39,17 @@ public class Board {
 					manhattanCount += Math.abs(jcolumn - j) + Math.abs(iline - i);
 				}
 			}
+	}
+
+	public int dimension() {
+		return n;
+	}
+
+	public int hamming() {
+		return hammingCount;
+	}
+
+	public int manhattan() {
 		return manhattanCount;
 	}
 
@@ -62,15 +67,26 @@ public class Board {
 			blocks1[0][0] = blocks[n-1][n-1];
 			blocks1[n-1][n-1] = blocks[0][0];
 		} else {
-			blocks1[1][1] = blocks[n-2][n-2];
-			blocks1[n-2][n-2] = blocks[1][1];			
+			blocks1[0][1] = blocks[n-1][n-2];
+			blocks1[n-1][n-2] = blocks[0][1];			
 		}
 		return new Board(blocks1);
 	}
 
 	public boolean equals(Object y) {
-		Board that = (Board) y;
-		return Arrays.equals(this.blocks, that.blocks);
+        if (y == this) return true;
+        if (y == null) return false;
+        if (y.getClass() != this.getClass()) return false;
+
+        Board that = (Board) y;
+
+        if (this.dimension() != that.dimension()) return false;
+
+		for(int i = 0; i < n; i++)
+			for(int j = 0; j< n; j++)
+				if(this.blocks[i][j] != that.blocks[i][j])
+					return false;
+		return true;
 	}
 
 	public Iterable<Board> neighbors() {
@@ -93,10 +109,10 @@ public class Board {
 						blocks1[i][j] = blocks[i][j];
 						blocks2[i][j] = blocks[i][j];
 					}
-				blocks1[0][0] = blocks[0][1];
-				blocks1[0][1] = 0;
-				blocks2[0][0] = blocks[1][0];
-				blocks2[1][0] = 0;
+				blocks1[spotline][spotcolumn] = blocks[spotline][spotcolumn+1];
+				blocks1[spotline][spotcolumn+1] = 0;
+				blocks2[spotline][spotcolumn] = blocks[spotline+1][spotcolumn];
+				blocks2[spotline+1][spotcolumn] = 0;
 				Board board1 = new Board(blocks1);
 				Board board2 = new Board(blocks2);
 				stack.push(board1);
@@ -109,10 +125,10 @@ public class Board {
 						blocks1[i][j] = blocks[i][j];
 						blocks2[i][j] = blocks[i][j];
 					}
-				blocks1[0][spotcolumn] = blocks[0][spotcolumn-1];
-				blocks1[0][spotcolumn-1] = 0;
-				blocks2[0][spotcolumn] = blocks[1][spotcolumn];
-				blocks2[1][spotcolumn] = 0;
+				blocks1[spotline][spotcolumn] = blocks[spotline][spotcolumn-1];
+				blocks1[spotline][spotcolumn-1] = 0;
+				blocks2[spotline][spotcolumn] = blocks[spotline+1][spotcolumn];
+				blocks2[spotline+1][spotcolumn] = 0;
 				Board board1 = new Board(blocks1);
 				Board board2 = new Board(blocks2);
 				stack.push(board1);
@@ -127,12 +143,12 @@ public class Board {
 						blocks2[i][j] = blocks[i][j];
 						blocks3[i][j] = blocks[i][j];
 					}
-				blocks1[0][spotcolumn] = blocks[0][spotcolumn-1];
-				blocks1[0][spotcolumn-1] = 0;
-				blocks2[0][spotcolumn] = blocks[spotcolumn-1][0];
-				blocks2[spotcolumn-1][0] = 0;
-				blocks3[0][spotcolumn] = blocks[1][spotcolumn];
-				blocks3[1][spotcolumn] = 0;				
+				blocks1[spotline][spotcolumn] = blocks[spotline][spotcolumn-1];
+				blocks1[spotline][spotcolumn-1] = 0;
+				blocks2[spotline][spotcolumn] = blocks[spotline+1][spotcolumn];
+				blocks2[spotline+1][spotcolumn] = 0;
+				blocks3[spotline][spotcolumn] = blocks[spotline][spotcolumn+1];
+				blocks3[spotline][spotcolumn+1] = 0;		
 				Board board1 = new Board(blocks1);
 				Board board2 = new Board(blocks2);
 				Board board3 = new Board(blocks3);
