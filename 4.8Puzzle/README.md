@@ -39,3 +39,15 @@ Timing:       116/125 tests passed
 
 Aggregate score: 86.32%
 [Compilation: 5%, API: 5%, Findbugs: 0%, PMD: 0%, Checkstyle: 0%, Correctness: 60%, Memory: 10%, Timing: 20%]
+
+3.Third Submit
+Correctness:  49/49 tests passed
+Memory:       22/22 tests passed
+Timing:       117/125 tests passed
+
+Aggregate score: 98.72%
+[Compilation: 5%, API: 5%, Findbugs: 0%, PMD: 0%, Checkstyle: 0%, Correctness: 60%, Memory: 10%, Timing: 20%]
+
+The main modification is change from import java.util.Stack to import edu.princeton.cs.algs4.Stack, it seems the sequence of iterator is different.
+
+At last, there is still some memroy test unpassed.

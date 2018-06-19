@@ -1,24 +1,22 @@
-import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Out;
 import java.util.Stack;
-import java.util.Arrays;
 
 public class Board {
 	private final int n;
 	private int hammingCount;
 	private int manhattanCount;
-	private int[][] blocks;
+	private final int[][] blocks;
 
-	public Board(int[][] blocks) {
-		n = blocks.length; // Give the number of rows
+	public Board(int[][] inblocks) {
+		if (inblocks == null) throw new NullPointerException("Null blocks");
+		n = inblocks.length; // Give the number of rows
 		// columns = blocks[x].length   x is arbitary number less than n
-		this.blocks = blocks;
-		//blocks = new int[n][n];
-		//for(int i = 0; i < n; i++)
-		//	for(int j = 0; j< n; j++)
-		//		blocks[i][j] = inblocks[i][j];
+		// this.blocks = blocks;
+		blocks = new int[n][n];
+		for(int i = 0; i < n; i++)
+			for(int j = 0; j< n; j++)
+				blocks[i][j] = inblocks[i][j];
 
 		hammingCount = 0;
 		for (int i = 0; i < n; i++)
@@ -32,7 +30,7 @@ public class Board {
 		int jcolumn;
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++) {
-				if (blocks[i][j] != 0 && blocks[i][j] != i*n+j+1 ) {
+				if (blocks[i][j] != 0 && blocks[i][j] != i*n+j+1) {
 					minusone = blocks[i][j] -1;
 					jcolumn = minusone % n;
 					iline = minusone/n;

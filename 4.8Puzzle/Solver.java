@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Out;
-import java.util.Stack;
+import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
 	private SearchNode current;
@@ -22,6 +22,8 @@ public class Solver {
 
         //constructor for SearchNode class
         private SearchNode(Board board, SearchNode predecessor, boolean original) {
+        	if (board == null) 
+                throw new NullPointerException("Null Board"); 
         	this.board = board;
         	this.predecessor = predecessor;
         	if (predecessor == null) {
@@ -35,12 +37,16 @@ public class Solver {
         }
 
         public int compareTo(SearchNode SN){
-        	return this.priority - SN.priority;
+        	if (this.priority == SN.priority) 
+                return this.board.hamming() - SN.board.hamming();
+            else 
+                return this.priority - SN.priority; 
         }
     }
 
     // constructor for Solver class
 	public Solver(Board initial) {
+		if (initial == null) throw new IllegalArgumentException("Null Board");
 
 		MinPQ<SearchNode> pq = new MinPQ<SearchNode>(); // The priority queue can be resized
 		pq.insert(new SearchNode(initial, null, true));
@@ -69,9 +75,10 @@ public class Solver {
 	public Iterable<Board> solution() {
 		if (!isSolvable()) return null;
 		Stack<Board> board = new Stack<Board>();
-		while (current != null) {
-			board.push(current.board);
-			current = current.predecessor;
+		SearchNode node = current;  // to keep the class immutable
+		while (node != null) {
+			board.push(node.board);
+			node = node.predecessor;
 		}
 		return board;
 	}
