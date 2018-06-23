@@ -110,13 +110,13 @@ public class KdTree {
         	cmp = p.y() - currentnode.p.y();
         	if      (cmp < 0) return get(currentnode.lb,  p, count);
         	else if (cmp > 0) return get(currentnode.rt, p, count);
-        	else if (p.x() == currentnode.p.x())	return currentnode.p;
+        	else if (p.equals(currentnode.p))	return currentnode.p;
         	else	return get(currentnode.rt, p, count);
         } else {
         	cmp = p.x() - currentnode.p.x();
         	if      (cmp < 0) return get(currentnode.lb,  p, count);
         	else if (cmp > 0) return get(currentnode.rt, p, count);
-        	else if (p.y() == currentnode.p.y())	return currentnode.p;
+        	else if (p.equals(currentnode.p))	return currentnode.p;
         	else	return get(currentnode.rt, p, count);
         }
     }
@@ -171,60 +171,44 @@ public class KdTree {
 		return currentnode;
 	}
 
-//	public Point2D nearest(Point2D p) {
-//		if (p == null) throw new NullPointerException("Null point");
-//        if (root == null) return null;
-//        
-//		Stack<Point2D> stack = new Stack<Point2D>();
-//		double distance2 = root.p.distanceSquaredTo(p);
-//		stack.push(root.p);
-//
-//		root = nearest(root, p, stack, distance2);
-//
-//		return stack.pop();
-//	}
-//
-//	private Node nearest(Node currentnode, Point2D p, Stack<Point2D> stack, double distance2) {
-//		if (currentnode == null) return currentnode;
-//		if (currentnode.rect.distanceSquaredTo(p) < distance2) {
-//			if (currentnode.p.distanceSquaredTo(p) < distance2) {
-//				distance2 = currentnode.p.distanceSquaredTo(p);
-//			}
-//			currentnode.lb = nearest(currentnode.lb, p, stack, distance2);
-//			currentnode.rt = nearest(currentnode.rt, p, stack, distance2);
-//			stack.pop();
-//			stack.push(currentnode.p);
-//		}
-//		return currentnode;
-//	}
+	public Point2D nearest(Point2D p) {
+		if (p == null) throw new IllegalArgumentException("Null point");
+        if (root == null) return null;
+        int count = 0;
+		return nearest(root, p, root.p, count);
+	}
 
-     public Point2D nearest(Point2D p) {
-         // a nearest neighbor in the set to point p; null if the set is empty
-         if (p == null)
-             throw new IllegalArgumentException("Point2D p is not illegal!");
-         if (root != null)
-             return nearest(root, p, root.p);
-         return null;
-     }
+	private Point2D nearest(Node currentnode, Point2D p, Point2D minpoint, int count) {
+		
+		count++;
+		if (currentnode == null) return minpoint;
+		if (currentnode.p.equals(p)) return currentnode.p;
 
-     private Point2D nearest(Node x, Point2D p, Point2D currNearPoint) {
-         if(x.p.equals(p)) return x.p;
-         double currMinDistance = currNearPoint.distanceTo(p);
-         if (Double.compare(x.rect.distanceTo(p), currMinDistance) >= 0)
-             return currNearPoint;
-         else {
-             double distance = x.p.distanceTo(p);
-             if (Double.compare(x.p.distanceTo(p), currMinDistance) == -1) {
-                 currNearPoint = x.p;
-                 currMinDistance = distance;
-             }
-             if (x.lb != null)
-                 currNearPoint = nearest(x.lb, p, currNearPoint);
-             if (x.rt != null)
-                 currNearPoint = nearest(x.rt, p, currNearPoint);
-         }
-         return currNearPoint;
-     }
+		double cmp;
+		if (count%2 == 0) 	cmp = p.y() - currentnode.p.y();
+		else 				cmp = p.x() - currentnode.p.x();
+
+		if (currentnode.p.distanceSquaredTo(p) < minpoint.distanceSquaredTo(p)) {
+			minpoint = currentnode.p;
+		}
+
+		if (cmp < 0) {
+			minpoint = nearest(currentnode.lb, p, minpoint, count);
+			if (currentnode.rt != null) {
+				if (currentnode.rt.rect.distanceSquaredTo(p) < minpoint.distanceSquaredTo(p)) 
+					minpoint = nearest(currentnode.rt, p, minpoint, count);
+			}
+		} else {
+			minpoint = nearest(currentnode.rt, p, minpoint, count);
+			if (currentnode.lb != null) {
+				if (currentnode.lb.rect.distanceSquaredTo(p) < minpoint.distanceSquaredTo(p)) 
+					minpoint = nearest(currentnode.lb, p, minpoint, count);
+			}
+		}
+
+		
+		return minpoint;
+	}
 
 	public static void main(String[] args) {
 		String filename = args[0];
@@ -238,7 +222,7 @@ public class KdTree {
         }
     
     	kdtree.draw();
-    	RectHV rect = new RectHV(0.0, 0.5, 1.0, 1.0);
+    	//RectHV rect = new RectHV(0.0, 0.5, 1.0, 1.0);
     	//for (Point2D p : kdtree.range(rect)) {
     	//	StdDraw.setPenColor(StdDraw.GREEN);
     	//	StdDraw.setPenRadius(0.02);
